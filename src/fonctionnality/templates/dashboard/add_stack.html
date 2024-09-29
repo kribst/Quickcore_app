@@ -1,0 +1,56 @@
+{% extends "dashboard/main_stack.html" %}
+{% load static %}
+{% block title %}Add Stack | Quickscore{% endblock %}
+{% block active %} active{% endblock %}
+{% block content %}
+<div class="col-12 grid-margin stretch-card">
+  <div class="card">
+    <div class="card-body">
+       <form method="post" class="forms-sample" enctype="multipart/form-data">
+            {% csrf_token %}
+             {{ form.as_p }}
+          <input type="submit" class="btn btn-primary mr-2" value="Add Stack">
+       </form>
+    </div>
+  </div>
+</div>
+
+<!-- main-panel ends -->
+<script type="text/javascript">
+const paragraphElements = document.querySelectorAll('p');
+
+  paragraphElements.forEach(paragraph => {
+  const newDiv = document.createElement('div');
+  newDiv.innerHTML = paragraph.innerHTML;
+  paragraph.parentNode.replaceChild(newDiv, paragraph);
+  newDiv.classList.add('form-group');
+});
+
+    const labelElement = document.querySelector('label');
+    labelElement.setAttribute('for', 'exampleInputName1');
+
+    const inputElement = document.querySelector("#id_title")
+    inputElement.classList.add('form-control');
+    inputElement.placeholder = "Enter the title";
+
+    const assign = document.querySelector("#id_assigned_to");
+    const assignlabel = document.querySelector("#id_assigned_to");
+    assignlabel.classList.add('form-control');
+    assign.classList.add('form-group');
+
+    const status = document.querySelector("#id_status")
+    status.classList.add('form-control');
+
+    const durationinput = document.querySelector("#id_duration");
+    durationinput.type = 'datetime-local';
+    durationinput.classList.add('form-control');
+
+    const image = document.querySelector("#id_image")
+    image.classList.add('form-control');
+
+    const description = document.querySelector("#id_description");
+    description.classList.add('form-control');
+    description.placeholder = "talk about your project";
+
+</script>
+{% endblock %}

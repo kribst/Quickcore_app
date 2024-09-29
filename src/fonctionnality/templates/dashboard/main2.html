@@ -1,0 +1,180 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+   <head>
+        <meta charset="utf-8">
+        <meta content="width=device-width, initial-scale=1.0" name="viewport">
+        <title>{% block title %}{% endblock %}</title>
+        <meta name="description" content="">
+        <meta name="keywords" content="">
+        <link rel="icon" type="image/x-icon" sizes="60x60" href="{% static 'media/logo.png' %}">
+
+
+
+
+        <link rel="stylesheet" href="{% static 'assets2/vendors/mdi/css/materialdesignicons.min.css' %}">
+        <!-- flag-icon-css -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/4.1.5/css/flag-icon.min.css">
+
+        <!-- vendor.bundle.base.css (fichier spécifique à votre projet) -->
+        <link rel="stylesheet" href="{% static 'assets2/vendors/css/vendor.bundle.base.css' %}">
+
+        <!-- font-awesome.min.css -->
+        <link rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/font-awesome.min.css">
+
+        <!-- bootstrap-datepicker.min.css -->
+        <link rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css">
+
+        <link rel="stylesheet" href="{% static 'assets2/css/style.css' %}">
+
+         <!-- CSS Files -->
+
+        <!-- End layout styles -->
+    </head>
+
+<body>
+       <div class="container-scroller">
+      <!-- partial:partials/_navbar.html -->
+      <nav class="navbar default-layout-navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
+        <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-start">
+          <a class="navbar-brand brand-logo" style="margin-top: 3.125rem; width: 4.063rem; margin-left: 1.25rem; color: #ffffff;" href="{% url 'dashboard' %}"><img src="{% static 'media/logo.png' %}" alt="logo"/>UICKCORE</a>
+            <a class="navbar-brand brand-logo-mini" href="{% url 'dashboard' %}"><img src="{% static 'media/logo.png' %}" alt="logo" /></a>
+        </div>
+        <div class="navbar-menu-wrapper d-flex align-items-stretch">
+          <button class="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="minimize">
+            <span class="mdi mdi-menu"></span>
+          </button>
+          {% block seach %}{% endblock %}
+          <ul class="navbar-nav navbar-nav-right">
+            <li class="nav-item nav-profile dropdown">
+                {% if request.user.is_authenticated %}
+              <a class="nav-link" id="profileDropdown" href="#" data-toggle="dropdown" aria-expanded="false">
+                <div class="nav-profile-img" style="margin-right: 20px; margin-left: 0px;">
+                  <img src="{{ request.user.image.url }}" alt="{{ request.user.last_name }}" style="width: 55px; height: 100%;">
+                </div>
+                <div class="nav-profile-text">
+                  <h3 class="mb-1 text-dark" style="margin-right: 2px;">
+                            {{ request.user.first_name }} {{ request.user.last_name }}
+                        {% else %}
+                            Aucun utilisateur connecté
+                      {% endif %}</h3>
+                </div>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </nav>
+      <!-- partial -->
+      <div class="container-fluid page-body-wrapper">
+        <!-- partial:partials/_sidebar.html -->
+        <nav class="sidebar sidebar-offcanvas" id="sidebar">
+          <ul class="nav">
+            <li class="nav-item nav-category">Main</li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'addstack' %}">
+                <span class="icon-bg"><i class="mdi mdi-contacts menu-icon"></i></span>
+                <span class="menu-title">Task</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'chat' %}">
+                <span class="icon-bg"><i class="mdi mdi-email-outline menu-icon"></i></span>
+                <span class="menu-title">Chat</span>
+              </a>
+            </li>
+            <li class="nav-item documentation-link">
+              <a class="nav-link" href="{% url 'documentationfile' filename='documentation.pdf' %}" target="_blank">
+                <span class="icon-bg">
+                  <i class="mdi mdi-file-document-box menu-icon"></i>
+                </span>
+                <span class="menu-title">Documentation</span>
+              </a>
+            </li>
+            <li class="nav-item sidebar-user-actions">
+            </li>
+            <li class="nav-item sidebar-user-actions">
+                {% if user.is_staff %}
+              <div class="sidebar-user-menu">
+                <a href="{% url 'admin:index' %}" class="nav-link"><i class="mdi mdi-settings menu-icon"></i>
+                  <span class="menu-title">Settings</span>
+                </a>
+              </div>
+                {% endif %}
+            </li>
+            <li class="nav-item sidebar-user-actions">
+             <form  action="{% url 'logout' %}" method="post"  class="sidebar-user-menu">
+                  {% csrf_token %}
+                <button type="submit" class="nav-link btn dark"><i class="mdi mdi-logout menu-icon"></i>
+                  <span class="menu-title">Log Out</span></button>
+              </form>
+            </li>
+          </ul>
+        </nav>
+        <!-- partial -->
+        <div class="main-panel">
+          <div class="content-wrapper">
+            {% block overview %}{% endblock %}
+            <div class="row">
+              <div class="col-md-12">
+                <div class="d-sm-flex justify-content-between align-items-center transaparent-tab-border">
+                </div>
+                <div class="tab-content tab-transparent-content">
+                  <div class="tab-pane fade show active" id="business-1" role="tabpanel" aria-labelledby="business-tab">
+                    <div class="row">
+                      <div class="col-12 grid-margin">
+                        <div class="card">
+                          <div class="card-body">
+                            <div class="row">
+
+<!-- --------------------------------------------------------uuuuuuuuuuuuuuuuuuuuuuuuuuu ---------------------------------------------------------------------> <!-- deuxieme partie  ---------------------------------------------------------------------------->
+   {% block content %} {% endblock %}
+<!-- --------------------------------------------------------uuuuuuuuuuuuuuuuuuuuuuuuuuu --------------------------------------------------------------------->
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- content-wrapper ends -->
+          <!-- partial:partials/_footer.html -->
+          <footer class="footer">
+            <div class="footer-inner-wraper">
+              <div class="d-sm-flex justify-content-center justify-content-sm-between">
+                <span class="text-muted d-block text-center text-sm-left d-sm-inline-block">ILASSI DJOBA (Ingenieur en administration systeme et reseaux/ ingenieur telecom)</span>
+
+              </div>
+            </div>
+          </footer>
+          <!-- partial -->
+        </div>
+        <!-- main-panel ends -->
+      </div>
+      <!-- page-body-wrapper ends -->
+    </div>
+    <!-- container-scroller -->
+    <!-- plugins:js -->
+    <script src="{% static 'assets2/vendors/js/vendor.bundle.base.js' %}"></script>
+    <!-- endinject -->
+    <!-- Plugin js for this page -->
+    <script src="{% static 'assets2/vendors/chart.js/Chart.min.js' %}"></script>
+    <script src="{% static 'assets2/vendors/jquery-circle-progress/js/circle-progress.min.js' %}"></script>
+    <!-- End plugin js for this page -->
+    <!-- inject:js -->
+    <script src="{% static 'assets2/js/off-canvas.js' %}"></script>
+    <script src="{% static 'assets2/js/hoverable-collapse.js' %}"></script>
+    <script src="{% static 'assets2/js/misc.js' %}"></script>
+    <!-- endinject -->
+    <!-- Custom js for this page -->
+    <script src="{% static 'assets2/js/dashboard.js' %}"></script>
+    <!-- End custom js for this page -->
+</body>
+
+</html>

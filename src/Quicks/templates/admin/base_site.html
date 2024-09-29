@@ -1,0 +1,31 @@
+{% extends "admin/base.html" %}
+{% load static %}
+
+{% block branding %}
+
+     <a class="navbar-brand brand-logo"><img src="{% static 'media/LOGO1.png' %}" alt="logo" /></a>
+
+<a class="nav-link" href="{% url 'addstack' %}" style="padding-top: 30px; font-weight: 700; color: #4A90E2">
+    <span class="menu-title" style="color: blue;">Dashboard</span>
+</a>
+<a class="nav-link" href="{% url 'addstack' %}" style="padding-top: 30px; font-weight: 700; color: #4A90E2">
+    <span class="menu-title">Add Tasck</span>
+</a>
+<a class="nav-link" href="{% url 'allstack' %}" style="padding-top: 30px; font-weight: 700; color: #4A90E2">
+    <span class="menu-title">All Task</span>
+</a><a class="nav-link" href="{% url 'chat' %}" style="padding-top: 30px; font-weight: 700; color: #4A90E2">
+    <span class="menu-title">Chat</span>
+</a>
+
+
+
+{% endblock %}
+
+{% block extrastyle %}
+
+<style>
+
+</style>
+
+
+{% endblock %}

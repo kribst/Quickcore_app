@@ -1,0 +1,60 @@
+{% extends "dashboard/main2.html" %}
+{% load static %}
+{% block title %}Détails du Tack | Quickscore{% endblock %}
+{% block seach %}
+
+<div class="search-field d-none d-xl-block">
+    <form class="d-flex align-items-center h-100" action="{% url 'search_view' %}" method="GET">
+        <div class="input-group w-100">
+            <div class="input-group-prepend bg-transparent">
+              <i class="input-group-text border-0 mdi mdi-magnify"></i>
+            </div>
+            <input type="text" name="q" class="form-control bg-transparent border-0" placeholder="Search Tasks">
+         </div>
+         <button type="submit" class="btn btn-primary ml-2">Search</button>
+    </form>
+</div>
+{% endblock %}
+
+{% block overview %}
+<div class="d-xl-flex justify-content-between align-items-start mb-3">
+    <h2 class="text-dark font-weight-bold mb-2">About: {{ stack.title }}</h2>
+    <div class="d-sm-flex justify-content-xl-between align-items-center">
+        <div class="btn-group bg-white p-2" role="group" aria-label="Basic example">
+          <button class="btn text-light py-0 border-right">{{ today|date:"l, d F Y" }}</button>
+          <button class="btn text-dark py-0 border-right">{{ today|date:"F Y" }}</button>
+       </div>
+        <div class="dropdown ml-0 ml-md-4 mt-2 mt-lg-0">
+            <button class="btn bg-white dropdown-toggle p-2 d-flex align-items-center" id="dropdownMenuButton1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="mdi mdi-clock mr-1"></i>{{ current_time }}
+            </button>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-5 col-12 text-center">
+            {% if stack.image %}
+            <img src="{{ stack.image.url }}" alt="{{ stack.title }}" class="img-fluid" style="max-width: 100%;">
+            {% endif %}
+        </div>
+        <div class="col-md-7 col-12">
+            <h2>{{ stack.title }}</h2>
+            <div>
+                <h3><strong>Statut :</strong> {{ stack.get_status_display }}</h3>
+                <span class="product-available"><strong>Créé le :</strong> {{ stack.created_at }}</span>
+            </div>
+            <div>
+                <h3><strong>Email assigné :</strong> {{ stack.assigned_to }}</h3>
+            </div>
+            <div>
+                <p style="color: black">{{ stack.description }}</p>
+            </div>
+        </div>
+    </div>
+    <a href="{% url 'allstack' %}" class="btn btn-primary mt-3">All Tack(s)</a>
+</div>
+{% endblock %}

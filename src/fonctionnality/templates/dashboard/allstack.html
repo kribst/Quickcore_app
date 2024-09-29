@@ -1,0 +1,118 @@
+{% extends "dashboard/main_stack.html" %}
+{% load static %}
+{% block title %}All Stacks | Quickscore{% endblock %}
+{% block actives %} active{% endblock %}
+
+{% block content %}
+<style>
+    .table {
+        width: 100%; /* Prend toute la largeur disponible */
+        max-width: 80%; /* Largeur maximale du tableau */
+        table-layout: fixed; /* Fixe la largeur des colonnes */
+    }
+    .table th, .table td {
+        border: 1px solid #f4f4f4; /* Bordures pour les cellules */
+        padding: 8px; /* Espacement interne */
+        overflow: hidden; /* Cache le débordement */
+        text-overflow: ellipsis; /* Affiche des points de suspension pour le texte débordant */
+        white-space: nowrap; /* Empêche le retour à la ligne par défaut */
+    }
+    .table td.expandable {
+        white-space: normal; /* Permet le retour à la ligne dans les cellules spécifiques */
+        max-width: 300px; /* Largeur maximale pour la description */
+    }
+</style>
+
+<div class="col-12 grid-margin stretch-card">
+    <div class="card">
+        <div class="box-body" style="position: relative; border-radius: 3px; border-top: 3px solid #d2d6de; margin-bottom: 20px;">
+
+            <table class="table table-bordered" style="width: 100%; max-width: 100%; margin-bottom: 20px; border: 1px solid #f4f4f4;">
+                <thead>
+                    <tr style="border-bottom: 1px solid #f4f4f4;">
+                        <th><input type="checkbox" id="select-all"> Sélect</th>
+                        <th style="text-align: center;">Image</th>
+                        <th style="text-align: center;">Title</th>
+                        <th style="text-align: center;">Email assigned</th>
+                        <th style="text-align: center;">Status</th>
+                        <th style="text-align: center;">Created</th>
+                        <th style="text-align: center;">Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for stack in stacks %}
+                    <tr style="border-bottom: 1px solid #f4f4f4;" data-stack-id="{{ stack.id }}">
+                        <td style="border-bottom: 1px solid #f4f4f4;"><input type="checkbox" class="select-row"></td>
+                        <td style="border-bottom: 1px solid #f4f4f4; text-align: center;">
+                            <a href="{{ stack.get_absolute_url }}">
+                                {% if stack.image %}
+                                    <img src="{{ stack.image.url }}" alt="{{ stack.title }}" style="max-width: 120px;">
+                                {% else %}
+                                    Pas d'image
+                                {% endif %}
+                            </a>
+                        </td>
+                        <td style="border-bottom: 1px solid #f4f4f4; text-align: center;">
+                            <a style="color: black;" href="{{ stack.get_absolute_url }}">{{ stack.title }}</a>
+                        </td>
+                        <td style="border-bottom: 1px solid #f4f4f4; text-align: center;">{{ stack.assigned_to }}</td>
+                        <td style="border-bottom: 1px solid #f4f4f4; text-align: center;">{{ stack.get_status_display }}</td>
+                        <td style="border-bottom: 1px solid #f4f4f4; text-align: center;">{{ stack.created_at }}</td>
+                        <td style="border-bottom: 1px solid #f4f4f4; text-align: center;">{{ stack.description }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            <div class="pagination justify-content-end">
+                <span class="step-links">
+                    {% if page_obj.has_previous %}
+                        <a href="?page=1">&laquo; Première</a>
+                        <a href="?page={{ page_obj.previous_page_number }}">Précédent</a>
+                    {% endif %}
+                    <span class="current">
+                        Page {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}.
+                    </span>
+                    {% if page_obj.has_next %}
+                        <a href="?page={{ page_obj.next_page_number }}">Suivant</a>
+                        <a href="?page={{ page_obj.paginator.num_pages }}">Dernière &raquo;</a>
+                    {% endif %}
+                </span>
+            </div>
+
+            <form action="{% url 'delete_stacks' %}" method="post" id="delete-form">
+                {% csrf_token %}
+                <input type="hidden" id="stack-ids" name="stack_ids[]" value="">
+                <input style="margin-top: 20px; border-radius: 8px" id="delete-selected" type="button" class="btn btn-danger mr-2" value="Delete">
+            </form>
+
+        </div>
+    </div>
+</div>
+
+<script>
+    const selectAllCheckbox = document.getElementById('select-all');
+    const deleteButton = document.getElementById('delete-selected');
+    const deleteForm = document.getElementById('delete-form');
+    const stackIdsInput = document.getElementById('stack-ids');
+
+    selectAllCheckbox.addEventListener('change', () => {
+        const checked = selectAllCheckbox.checked;
+        document.querySelectorAll('.select-row').forEach(row => {
+            row.checked = checked;
+        });
+    });
+
+    deleteButton.addEventListener('click', () => {
+        const selectedRows = document.querySelectorAll('.select-row:checked');
+        const stackIds = Array.from(selectedRows).map(row => row.closest('tr').dataset.stackId);
+
+        if (stackIds.length > 0) {
+            stackIdsInput.value = stackIds;
+            deleteForm.submit();
+        } else {
+            alert('Veuillez sélectionner au moins une tâche à supprimer.');
+        }
+    });
+</script>
+{% endblock %}

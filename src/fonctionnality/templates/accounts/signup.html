@@ -1,0 +1,132 @@
+{% extends "registration.html" %}
+{% load static %}
+{% block title %}Signup | Quickscore{% endblock %}
+
+{% block content %}
+
+
+
+<div class="row g-0" style="border-top-left-radius: .15rem; border-bottom-left-radius: .15rem; object-fit: cover; width: 100%; height: 100%;">
+  <div class="col-xl-6 d-none d-xl-block">
+  <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-registration/img4.webp" alt="Sample photo" class="img-fluid">
+</div>
+            <div class="col-xl-6">
+              <div class="card-body p-md-5 text-black">
+                 <h1 style="display: flex; justify-content: center; align-items: center; padding-top: 30px; margin-bottom: 40px;"><img style="height: 50px;" src="{% static 'media/logo.png' %}" alt=""><span class="colo">uickscore</span></h1>
+                  <h3 data-aos-delay="100" style="display: flex; justify-content: center; align-items: center; text-align: center; color: dark; margin-bottom: 40px;">Quickly signup here and start your project now and set the stage for success<br></h3>
+                <div class="col-12 grid-margin stretch-card">
+                <div class="card">
+                 <div class="card-body">
+                 <form class="forms-sample" method="post" enctype="multipart/form-data">
+                     {% csrf_token %}
+                     {{ form.as_p }}
+                     <input type="submit" value="Signup">
+                  </form>
+               <div>
+                  <div>
+                     <div>
+                 <div class="d-flex flex-column flex-md-row">
+                 <p class="tec scrollto">You have an account? <a href="{% url 'login' %}">login</a></p>
+            </div>
+              </div>
+            </div>
+          </div>
+
+
+<script>
+const password2 = document.querySelector("#id_password2");
+password2.classList.add('form-control');
+password2.placeholder = "Please enter the same password";
+
+
+
+
+
+const paragraphElements = document.querySelectorAll('p');
+
+  paragraphElements.forEach(paragraph => {
+  const newDiv = document.createElement('div');
+  newDiv.innerHTML = paragraph.innerHTML;
+  paragraph.parentNode.replaceChild(newDiv, paragraph);
+  newDiv.classList.add('form-group');
+});
+
+const input = document.querySelector("#id_username");
+input.classList.add('form-control');
+input.placeholder = "Enter your username";
+
+const inputfirst = document.querySelector("#id_first_name");
+inputfirst.classList.add('form-control');
+inputfirst.placeholder = "Enter your first name";
+
+const inputlast = document.querySelector("#id_last_name");
+inputlast.classList.add('form-control');
+inputlast.placeholder = "Enter your last name";
+
+const imageinput = document.querySelector("#id_image");
+imageinput.classList.add('form-control');
+imageinput.placeholder = "Please select your profile picture";
+
+const gender = document.querySelector("#id_gender");
+gender.classList.add('form-control');
+gender.placeholder = "Please select your gender";
+
+const email = document.querySelector("#id_email");
+email.classList.add('form-control');
+email.placeholder = "Please enter your email";
+
+const contry = document.querySelector("#id_country");
+contry.classList.add('form-control');
+contry.placeholder = "Please select your country";
+
+const phone = document.querySelector("#id_phone_number");
+phone.classList.add('form-control');
+phone.placeholder = "Please enter your phone number";
+
+const password = document.querySelector("#id_password1");
+password.classList.add('form-control');
+password.placeholder = "Please enter your password";
+
+
+const ul = document.querySelector("body > main > div > div:nth-child(2) > div > div > div > div > form > ul");
+ul.style.display = "none";
+
+const baseauth = document.querySelector("body > main > div > div:nth-child(2) > div > div > div > div > form > div:nth-child(14)")
+baseauth.style.display = "none";
+
+document.addEventListener("DOMContentLoaded", function() {
+    const passwordField = document.querySelector(".form-group"); // Sélectionner le groupe de formulaire
+    const password2 = document.querySelector("#id_password2");
+
+
+    password2.classList.add('form-control');
+    password2.placeholder = "Please enter the same password";
+
+
+    // Vérifiez si l'élément est masqué
+    if (passwordField && passwordField.style.display === "none") {
+        passwordField.style.display = "";  // Retirer le style 'none'
+    }
+});
+
+
+const ini2 = document.querySelector("#id_usable_password");
+ini2.style.display = "none";
+
+const ini3 = document.querySelector("#id_password2_helptext");
+ini3.style.display = "none";
+
+const ini4 = document.querySelector("#id_usable_password > div:nth-child(2)");
+ini4.style.display = "none";
+
+const ini5 = document.querySelector("#id_usable_password_helptext");
+ini5.style.display = "none";
+
+const buttonsign = document.querySelector("body > main > div > div:nth-child(2) > div > div > div > div > form > input[type=submit]:nth-child(18)");
+buttonsign.classList.add("btn", "btn-primary", "mr-2");
+buttonsign.style.marginTop = "13px";
+
+</script>
+
+{% endblock %}
+

@@ -1,0 +1,131 @@
+{% extends "dashboard/main.html" %}
+{% load static %}
+{% block title %}live Chat | Quickscore{% endblock %}
+
+{% block content %}
+<style>
+    #messages-container {
+        height: 120vh; /* Ajustez à 50% de la hauteur de la fenêtre */
+        max-height: 600px; /* Hauteur maximale pour éviter qu'elle ne devienne trop grande */
+        overflow-y: auto; /* Activer le défilement vertical */
+        padding: 10px;
+    }
+</style>
+
+<div class="main-panel">
+    <div class="content-wrapper">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card" id="chat1" style="border-radius: 15px;">
+                    <div class="card-body" id="messages-container"  style="margin-top: 19px;">
+                        {% for message in messages %}
+                        <div class="message">
+                            {% if message.user == request.user %}
+                            <div class="d-flex flex-row justify-content-end mb-4">
+                                <div class="p-3 me-3 border" style="border-radius: 15px; background-color: rgba(57, 192, 237,.2);">
+                                    <p class="small mb-0">{{ message.message }}</p>
+                                </div>
+                                <img src="{{ request.user.image.url }}" alt="avatar 1" style="width: 3.125rem; height: 70%; border-radius: 50px; margin-left: 0.5rem; margin-bottom: 0px">
+                            </div>
+                            <p class="small me-3 mb-3 rounded-3 text-muted d-flex justify-content-end">{{ message.timestamp|date:"H:i" }}</p>
+                            {% else %}
+                            <div class="d-flex flex-row justify-content-start mb-4">
+                                <img src="{{ other_user.image.url }}" alt="avatar 1" style="width: 3.125rem; height: 70%; border-radius: 50px">
+                                <div class="p-3 ms-3 border bg-body-tertiary" style="border-radius: 15px;">
+                                    <p class="small mb-0">{{ message.message }}</p>
+                                </div>
+                            </div>
+                            <p class="small me-3 mb-3 rounded-3 text-muted d-flex justify-content-start">{{ message.timestamp|date:"H:i" }}</p>
+                            {% endif %}
+                        </div>
+                        {% endfor %}
+                    </div>
+
+                    <form id="message-form" class="form-group">
+                        {% csrf_token %}
+                        <textarea placeholder="Votre message" name="message" required class="form-control" style="border-radius: 15px; width: 90%; margin: 1rem auto; display: block;"  rows="4"></textarea>
+                        <button type="submit" class="btn btn-primary mr-2" style="margin-top: 0.313rem; margin-bottom: 1.25rem; margin-left: 4.375rem; border-radius: 15px;" onclick="clearTextarea()">Envoyer</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<script>
+    function clearTextarea() {
+        document.getElementById('message').value = '';
+    };
+
+    function loadMessages() {
+        fetch('{% url "get_messages" %}')
+            .then(response => response.json())
+            .then(data => {
+                const messagesContainer = document.getElementById('messages-container');
+                messagesContainer.innerHTML = '';
+
+                data.forEach(message => {
+                    const messageDiv = document.createElement('div');
+                    messageDiv.className = 'message';
+                    messageDiv.innerHTML = `
+                        <div class="d-flex flex-row ${message.username === '{{ request.user.username }}' ? 'justify-content-end' : 'justify-content-start'} mb-4">
+                            ${message.username === '{{ request.user.username }}' ? `
+                                <div class="p-3 me-3 border" style="border-radius: 15px; background-color: rgba(57, 192, 237,.2);">
+                                    <p class="small mb-0">${message.message}</p>
+                                </div>
+                                <img src="${message.user_image}" alt="avatar" style="width: 3.125rem; height: 100%; border-radius: 70px; margin-left: 0.5rem; margin-bottom: 0px">
+                            ` : `
+                                <img src="${message.user_image}" alt="avatar" style="width: 3.125rem; height: 70%; border-radius: 50px">
+                                <div class="p-3 ms-3 border bg-body-tertiary" style="border-radius: 15px;">
+                                    <p class="small mb-0">${message.message}</p>
+                                </div>
+                            `}
+                        </div>
+                        <p class="small me-3 mb-3 rounded-3 text-muted d-flex ${message.username === '{{ request.user.username }}' ? 'justify-content-end' : 'justify-content-start'}">${message.timestamp}</p>
+                    `;
+                    messagesContainer.appendChild(messageDiv);
+                });
+            });
+    }
+
+    document.getElementById('message-form').addEventListener('submit', function(event) {
+        event.preventDefault();
+        const formData = new FormData(this);
+
+        fetch('{% url "send_message" %}', {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'X-CSRFToken': '{{ csrf_token }}'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            const messagesContainer = document.getElementById('messages-container');
+            const newMessageDiv = document.createElement('div');
+            newMessageDiv.innerHTML = `
+                <div class="d-flex flex-row ${data.username === '{{ request.user.username }}' ? 'justify-content-end' : 'justify-content-start'} mb-4">
+                    ${data.username === '{{ request.user.username }}' ? `
+                        <div class="p-3 me-3 border" style="border-radius: 15px; background-color: rgba(57, 192, 237,.2);">
+                            <p class="small mb-0">${data.message}</p>
+                        </div>
+                        <img src="${data.user_image}" alt="avatar" style="width: 3.125rem; height: 70%; border-radius: 50px">
+                    ` : `
+                        <img src="${data.user_image}" alt="avatar" style="width: 3.125rem; height: 70%; border-radius: 50px">
+                        <div class="p-3 ms-3 border bg-body-tertiary" style="border-radius: 15px;">
+                            <p class="small mb-0">${data.message}</p>
+                        </div>
+                    `}
+                </div>
+                <p class="small me-3 mb-3 rounded-3 text-muted d-flex ${data.username === '{{ request.user.username }}' ? 'justify-content-end' : 'justify-content-start'}">${data.timestamp}</p>
+            `;
+            messagesContainer.appendChild(newMessageDiv);
+        })
+        .catch(error => console.error('Error:', error));
+    });
+
+    setInterval(loadMessages, 2000);  // Récupérer les nouveaux messages toutes les 2 secondes
+
+</script>
+
+{% endblock %}
